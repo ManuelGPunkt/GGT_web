@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inverses von</title>
+    <link rel="stylesheet" href="ggtJS.css">
+</head>
+<body>
+    <form name="inverse" action="ggtJS.php" method="GET"><!--wenn kein Wert angegeben wurde, dann wird das Formular nicht abgeschickt-->
+        <h1><pre>      a = <input type="text" name="a"></pre></h1>
+        <h1><pre>(mod) n = <input type="text" name="n"></pre></h1>
+        <!-- nach dem der Text geckliket wurde, sollen vier weitere Moeglichkeiten gegeben werden (mit js dynamisch erzeugt)-->
+        <h3><span name="ext_op" style="text-decoration: underline;">weitere Rechenoperationen</span></h3>
+        <em></em> <!--das em Element ist nur um die erweiterten Optionen davon abzuleiten-->
+        <input type="submit" name="calculate" value="berechnen">
+        </form>
+    <script>
+        'use strict';
+
+        class Rbutton
+        {
+            constructor(name)
+            {
+                this.name = name;
+            }
+
+            make()
+            {
+                this.button = document.getElementsByTagName('em')[0]
+                        .appendChild(document.createElement('h1'));
+                this.button.className = 'ext';
+                this.button.innerHTML = "<input type='checkbox' name=" + this.name + "> " + this.name;
+            }
+        }
+
+        let counter = 0; //counter ist dazu da um die optionen entweder anzuzeigen, oder zu verbergen
+
+        let vluA = document.forms['inverse']['a'].value;
+        let vluN = document.forms['inverse']['n'].value;
+        let fieldA = document.forms['inverse']['a'];
+        let fieldN = document.forms['inverse']['n'];
+        let op = document.forms['inverse']['ext_op'];
+        let formField = document.getElementsByName('inverse')[0];
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        function init()
+        {
+            fieldA.addEventListener('change', setVluA);
+            fieldN.addEventListener('change', setVluN);
+            formField.addEventListener('submit', calc);
+            
+            document.forms['inverse']['calculate'].addEventListener('click', calc);
+
+            let op = document.getElementsByTagName('span')[0].addEventListener('click', createOPs);
+        }
+
+        function setVluA(e)
+        {
+            vluA = e.target.value;
+        }
+
+        function setVluN(e)
+        {
+            vluN = e.target.value;
+        }
+
+        function calc(e)
+        {
+            //funktion soll ueberpruefen ob a und b gesetzt sind
+            if(!checkValues(vluA, vluN))
+            {
+                e.preventDefault(); //abschicken des Formulares verhindern
+            }
+        }
+
+        function checkValues(vluA, vluN)
+        {
+            if((vluA=="")||(vluN==""))
+            {
+                if(vluA=="") fieldA.className = 'error';
+                if(vluN=="") fieldN.className = 'error';
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        function createOPs(e) //es soll jeweils mit appendChild ein radiobutton zur Ausfuehrung der op erzeugt werden
+        { //zusaetzlich soll es auch noch ein weiteres Texteingabefeld geben fuer die erzeugten op (fuer einen Wert b)
+            counter+=1;
+
+            if((counter%2)==1)
+            {
+                function createTextfieldB(e)
+                {
+                    let tfield = document.getElementsByTagName('h1')[0]
+                        .appendChild(document.createElement('pre'));
+                    tfield.className = "ext";
+                    tfield.innerHTML = "      b = <input type=\"text\" name=\"txtFieldB\">";
+                }
+                createTextfieldB(e);
+
+
+                let addRadioButtonAdd = new Rbutton("Addition");
+                addRadioButtonAdd.make();
+
+                let addRadioButtonSub = new Rbutton("Subtraktion");
+                addRadioButtonSub.make();
+
+                let addRadioButtonMult = new Rbutton("Multiplikation");
+                addRadioButtonMult.make();
+
+                let addRadioButtonDiv = new Rbutton("Division");
+                addRadioButtonDiv.make();
+
+
+                document.getElementsByTagName('span')[0].innerHTML = "verbergen"; //aendert die Anzeige "weitere Optionen" zu "verbergen"
+            }
+            else    //die ganzen zus. ops und das Eingabefeld fuer b sollen wieder entfernt werden.
+            {
+                for(let i=0; i<=4; i++) //es wird jeder radiobutton einzeln wieder geloescht
+                {
+                    document.getElementsByClassName('ext')[0].remove();
+                }
+                
+                document.getElementsByTagName('span')[0].innerHTML = "weitere Rechenoperationen"; //aendert die Anzeige "verbergen" zu "weitere Optionen"
+            }
+        }
+    </script>
+</body>
+</html>

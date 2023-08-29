@@ -1,0 +1,27 @@
+body
+{
+    background-color: rgb(88, 143, 231);
+}
+
+.error
+{
+    margin: red;
+}
+
+span:hover
+{
+    cursor: pointer;
+}
+
+input[type="radio"]
+{
+    cursor: pointer;
+    position: relative;
+    right: -20;
+}
+
+.ext_op
+{
+    position: relative;
+    left: 20;
+}
